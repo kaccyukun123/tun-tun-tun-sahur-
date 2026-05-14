@@ -5,6 +5,8 @@ int yPos = 480;
 
 int leftScore = 0;
 int rightScore = 0;
+Player rightP = new Player();
+Player leftP = new Player();
 
 
 PImage photo;
@@ -16,114 +18,92 @@ void settings() {
   pixelDensity(1);
   size(1067, 600);
   photo = loadImage("fightBackground.jpg");
-    
-
 }
-void draw(){
+void draw() {
   background(photo);
   if (paused) {   // Pause screen
     background(0);
     fill(255);
     textSize(40);
     text("PAUSED", width / 2-100, height/ 2);
-    return;  
-  }  
-  
+    return;
+  }
+
   drawPlayer();
   drawScore();
   checkPlayerMovement();
-  
 }
 
 
-void drawPlayer(){
-  rect(leftPlayerX, leftPlayerY, 100, 350);
-  rect(rightPlayerX, rightPlayerY, 100, 350);
-  
-  rightPlayerX += rightPlayerSpeed;
-  leftPlayerX += leftPlayerSpeed;
+void drawPlayer() {
+  rect(leftP.PlayerX, leftP.PlayerY, 100, 350);
+  rect(rightP.PlayerX, rightP.PlayerY, 100, 350);
+
+  rightP.PlayerX += rightP.PlayerSpeed;
+  leftP.PlayerX += leftP.PlayerSpeed;
 }
 
-void checkPlayerMovement(){
-  if (leftPlayerX > 1067 - 100) {
-    leftPlayerX = 1067 - 100;
-    leftPlayerSpeed = 0;
+void checkPlayerMovement() {
+  if (leftP.PlayerX > 1067 - 100) {
+    leftP.PlayerX = 1067 - 100;
+    leftP.PlayerSpeed = 0;
   }
-  if(rightPlayerX < 0){
-    rightPlayerSpeed = 0;
-    rightPlayerX = 0; 
+  if (rightP.PlayerX < 0) {
+    rightP.PlayerSpeed = 0;
+    rightP.PlayerX = 0;
   }
-  if (rightPlayerX > 1067 - 100) {
-    rightPlayerX = 1067 - 100;
-    rightPlayerSpeed = 0;
+  if (rightP.PlayerX > 1067 - 100) {
+    rightP.PlayerX = 1067 - 100;
+    rightP.PlayerSpeed = 0;
   }
-  if(leftPlayerX < 0){
-    leftPlayerSpeed = 0;
-    leftPlayerX = 0;
+  if (leftP.PlayerX < 0) {
+    leftP.PlayerSpeed = 0;
+    leftP.PlayerX = 0;
   }
 }
 
-void drawScore(){
+void drawScore() {
   textSize(32);
   fill(255);
   text(leftScore, 250, 50);
   text(rightScore, 750, 50);
- 
 }
 
-void keyPressed(){
-   if (key == 'p') {
+void keyPressed() {
+  if (key == 'p') {
     paused = !paused;
-   }
-    if (keyCode == LEFT) {
-     rightPlayerSpeed = -7;
-   }
-   else if(keyCode == RIGHT ){
-     rightPlayerSpeed = 7;
-   } 
-   if (key == 'a') {
-     leftPlayerSpeed = -7;
-   }
-   else if(key == 'd') {
-     leftPlayerSpeed = 7;
-   }
-    if (key == 'r') {
-  leftScore = 0;
-  rightScore = 0;
- 
-  loop();
   }
-    
-}
-
-
-
-void keyReleased(){
   if (keyCode == LEFT) {
-     rightPlayerSpeed = 0; 
-   }
-   else if(keyCode == RIGHT){
-     rightPlayerSpeed = 0;
-   }
-   if (key == 'a') {
-     leftPlayerSpeed = 0;
-   }
-   else if(key == 'd'){
-     leftPlayerSpeed = 0;
-   }
-  
-  
+    rightP.PlayerSpeed = -7;
+  } else if (keyCode == RIGHT ) {
+    rightP.PlayerSpeed = 7;
+  }else  (keyCode == DOWN){
+     rightP.PlayerSpeedY = 2;
+  }}
+  if (key == 'a') {
+    leftP.PlayerSpeed = -7;
+  } else if (key == 'd') {
+    leftP.PlayerSpeed = 7;
+  }
+  if (key == 'r') {
+    leftScore = 0;
+    rightScore = 0;
+
+    loop();
+  }
 }
 
 
-class player{
 
-int rightPlayerY = 200;
-int leftPlayerY = 200;
-int rightPlayerX = 940;
-int leftPlayer = 50;
-int rightPlayerSpeed = 0;
-int leftPlayerSpeed = 0;
-}
-
+void keyReleased() {
+  if (keyCode == LEFT) {
+    rightP.PlayerSpeed = 0;
+  } else if (keyCode == RIGHT) {
+    rightP.PlayerSpeed = 0;
+  }
+  if (key == 'a') {
+    leftP.PlayerSpeed = 0;
+  } else if (key == 'd') {
+    leftP. PlayerSpeed = 0;
+  }
 }
