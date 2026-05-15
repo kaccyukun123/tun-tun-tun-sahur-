@@ -14,6 +14,18 @@ PImage photo;
 
 boolean paused = false;
 
+boolean leftPunch = false;
+boolean rightPunch = false;
+
+int punchTime = 10;
+
+int leftCooldown = 0;
+int rightCooldown = 0;
+
+
+
+
+
 void settings() {
   pixelDensity(1);
   size(1067, 600);
@@ -30,17 +42,31 @@ void draw() {
   }
 
   drawPlayer();
+  drawHitBox();
+  playerPunch();
   drawScore();
   checkPlayerMovement();
+
 }
 
 
 void drawPlayer() {
-  rect(leftP.PlayerX, leftP.PlayerY, 100, 350);
-  rect(rightP.PlayerX, rightP.PlayerY, 100, 350);
-
-  rightP.PlayerX += rightP.PlayerSpeed;
   leftP.PlayerX += leftP.PlayerSpeed;
+  rightP.PlayerX += rightP.PlayerSpeed;
+
+  // LEFT player body
+  rect(leftP.PlayerX, leftP.PlayerY, 100, 350);
+  //rect(leftP.PlayerX, leftP.PlayerY + 150, 180, 110);
+
+  // RIGHT player body (flipped arm)
+  rect(rightP.PlayerX, rightP.PlayerY, 100, 350);
+  //rect(rightP.PlayerX, rightP.PlayerY + 150, -180, 110);
+  
+}
+void drawHitBox(){
+  fill(0);
+  rect(leftP.PlayerX, leftP.PlayerY + 150, 100, 110);
+  rect(rightP.PlayerX, rightP.PlayerY + 150, 100, 110);
 }
 
 void checkPlayerMovement() {
@@ -60,7 +86,30 @@ void checkPlayerMovement() {
     leftP.PlayerSpeed = 0;
     leftP.PlayerX = 0;
   }
+
 }
+void playerPunch(){
+
+if (leftPunch) {
+
+    
+
+      rightScore++;
+      leftPunch = false;
+    }
+  
+
+if (rightPunch) {
+
+   
+
+      leftScore++;
+      rightPunch = false;
+    }
+  }
+
+
+
 
 void drawScore() {
   textSize(32);
@@ -77,9 +126,10 @@ void keyPressed() {
     rightP.PlayerSpeed = -7;
   } else if (keyCode == RIGHT ) {
     rightP.PlayerSpeed = 7;
-  }else  (keyCode == DOWN){
-     rightP.PlayerSpeedY = 2;
-  }}
+  } else if (keyCode == DOWN) {
+    rightP.PlayerSpeedY = 2;
+  }
+  
   if (key == 'a') {
     leftP.PlayerSpeed = -7;
   } else if (key == 'd') {
@@ -90,6 +140,14 @@ void keyPressed() {
     rightScore = 0;
 
     loop();
+  }
+  
+  if (key == 'w') {
+    leftPunch = true;
+  }
+  
+  if (key == DOWN) {
+    rightPunch = true;
   }
 }
 
