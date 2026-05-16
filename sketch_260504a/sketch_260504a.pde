@@ -1,3 +1,7 @@
+float gravity = 0.8;
+int ground = 250;
+
+
 int xPos = 0;
 int yPos = 480;
 
@@ -42,6 +46,7 @@ void draw() {
   }
 
   drawPlayer();
+  plsyerCollisonGround();
   drawHitBox();
   playerPunch();
   drawScore();
@@ -54,20 +59,41 @@ void drawPlayer() {
   leftP.PlayerX += leftP.PlayerSpeed;
   rightP.PlayerX += rightP.PlayerSpeed;
 
-  // LEFT player body
+  
   rect(leftP.PlayerX, leftP.PlayerY, 100, 350);
   //rect(leftP.PlayerX, leftP.PlayerY + 150, 180, 110);
 
-  // RIGHT player body (flipped arm)
   rect(rightP.PlayerX, rightP.PlayerY, 100, 350);
   //rect(rightP.PlayerX, rightP.PlayerY + 150, -180, 110);
   
+  
+   leftP.PlayerY += leftP.PlayerSpeedY;
+   leftP.PlayerSpeedY += gravity;
+
+  rightP.PlayerY += rightP.PlayerSpeedY;
+  rightP.PlayerSpeedY += gravity;
 }
 void drawHitBox(){
   fill(0);
   rect(leftP.PlayerX, leftP.PlayerY + 150, 100, 110);
   rect(rightP.PlayerX, rightP.PlayerY + 150, 100, 110);
 }
+
+void plsyerCollisonGround(){
+
+    if (leftP.PlayerY >= ground) {
+  leftP.PlayerY = ground;
+  leftP.PlayerSpeedY = 0;
+  leftP.onGround = true;
+}
+
+if (rightP.PlayerY >= ground) {
+  rightP.PlayerY = ground;
+  rightP.PlayerSpeedY = 0;
+  rightP.onGround = true;
+}
+}
+
 
 void checkPlayerMovement() {
   if (leftP.PlayerX > 1067 - 100) {
@@ -92,24 +118,60 @@ void playerPunch(){
 
 if (leftPunch) {
 
-    
+    int punchX = leftP.PlayerX + 100;
+    int punchY = leftP.PlayerY + 150;
+    int punchW = 60;
+    int punchH = 40;
 
-      rightScore++;
-      leftPunch = false;
-    }
-  
+    fill(0);
+    rect(punchX, punchY, punchW, punchH);
 
-if (rightPunch) {
+    if (checkHit(punchX, punchY, punchW, punchH,
+    rightP.PlayerX, rightP.PlayerY + 150, 100, 110)) {
 
-   
 
       leftScore++;
+      leftPunch = false;
+    }
+}
+
+if (rightPunch) {
+    int punchX = rightP.PlayerX - 60;
+    int punchY = rightP.PlayerY + 150;
+    int punchW = 60;
+    int punchH = 40;
+
+    fill(0);
+    rect(punchX, punchY, punchW, punchH);
+
+    if (checkHit(
+      punchX, punchY, punchW, punchH,
+      leftP.PlayerX, leftP.PlayerY + 150, 100, 110
+      )) {
+
+
+      rightScore++;
       rightPunch = false;
     }
-  }
+   
+}}
 
 
 
+boolean checkHit(
+  int x1, int y1, int w1, int h1,
+  int x2, int y2, int w2, int h2
+) {
+
+  return x1 < x2 + w2 &&
+         x1 + w1 > x2 &&
+         y1 < y2 + h2 &&
+         y1 + h1 > y2;
+
+
+
+
+}
 
 void drawScore() {
   textSize(32);
@@ -142,14 +204,23 @@ void keyPressed() {
     loop();
   }
   
-  if (key == 'w') {
+  if (key == 's') {
     leftPunch = true;
   }
   
-  if (key == DOWN) {
+  if (keyCode == DOWN) {
     rightPunch = true;
   }
-}
+  
+  if (key == 'w' && leftP.onGround) {
+    leftP.PlayerSpeedY = -15;
+    leftP.onGround = false;
+  }
+   if (keyCode == UP && rightP.onGround) {
+    rightP.PlayerSpeedY = -15;
+    rightP.onGround = false;
+  }
+}  
 
 
 

@@ -4,4 +4,6 @@ class Player {
   int PlayerX = 940;
   int PlayerSpeed = 0;
   int PlayerSpeedY = 0;
+  
+  boolean onGround = true;
 }
