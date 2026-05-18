@@ -1,5 +1,5 @@
 float gravity = 0.8;
-int ground = 250;
+int ground = 200;
 
 
 int xPos = 0;
@@ -56,8 +56,8 @@ void draw() {
 
 
 void drawPlayer() {
-  leftP.PlayerX += leftP.PlayerSpeed;
-  rightP.PlayerX += rightP.PlayerSpeed;
+  leftP.PlayerX += leftP.PlayerSpeedX;
+  rightP.PlayerX += rightP.PlayerSpeedX;
 
   
   rect(leftP.PlayerX, leftP.PlayerY, 100, 350);
@@ -68,10 +68,18 @@ void drawPlayer() {
   
   
    leftP.PlayerY += leftP.PlayerSpeedY;
-   leftP.PlayerSpeedY += gravity;
-
+   if(leftP.PlayerSpeedY != leftP.maxJump*-1){
+     
+      leftP.PlayerSpeedY += 1;
+    plsyerCollisonGround();
+   }
   rightP.PlayerY += rightP.PlayerSpeedY;
-  rightP.PlayerSpeedY += gravity;
+  if(rightP.PlayerSpeedY != rightP.maxJump*-1){
+    
+    rightP.PlayerSpeedY += 1;
+    plsyerCollisonGround();
+  }
+  //rightP.PlayerSpeedY += gravity;
 }
 void drawHitBox(){
   fill(0);
@@ -98,18 +106,18 @@ if (rightP.PlayerY >= ground) {
 void checkPlayerMovement() {
   if (leftP.PlayerX > 1067 - 100) {
     leftP.PlayerX = 1067 - 100;
-    leftP.PlayerSpeed = 0;
+    leftP.PlayerSpeedX = 0;
   }
   if (rightP.PlayerX < 0) {
-    rightP.PlayerSpeed = 0;
+    rightP.PlayerSpeedX = 0;
     rightP.PlayerX = 0;
   }
   if (rightP.PlayerX > 1067 - 100) {
     rightP.PlayerX = 1067 - 100;
-    rightP.PlayerSpeed = 0;
+    rightP.PlayerSpeedX = 0;
   }
   if (leftP.PlayerX < 0) {
-    leftP.PlayerSpeed = 0;
+    leftP.PlayerSpeedX = 0;
     leftP.PlayerX = 0;
   }
 
@@ -159,16 +167,9 @@ if (rightPunch) {
 
 
 boolean checkHit(
-  int x1, int y1, int w1, int h1,
-  int x2, int y2, int w2, int h2
-) {
+  int x1, int y1, int w1, int h1, int x2, int y2, int w2, int h2) {
 
-  return x1 < x2 + w2 &&
-         x1 + w1 > x2 &&
-         y1 < y2 + h2 &&
-         y1 + h1 > y2;
-
-
+  return x1 < x2 + w2 && x1 + w1 > x2 && y1 < y2 + h2 && y1 + h1 > y2;
 
 
 }
@@ -181,36 +182,45 @@ void drawScore() {
 }
 
 void keyPressed() {
-  if (key == 'p') {
-    paused = !paused;
-  }
+  
+  
   if (keyCode == LEFT) {
-    rightP.PlayerSpeed = -7;
+    rightP.PlayerSpeedX = -7;
   } else if (keyCode == RIGHT ) {
-    rightP.PlayerSpeed = 7;
-  } else if (keyCode == DOWN) {
-    rightP.PlayerSpeedY = 2;
+    rightP.PlayerSpeedX = 7;
+  }
+  if (keyCode == DOWN) {
+    rightPunch = true;
+  } 
+   if (keyCode == UP){
+     rightP.PlayerSpeedY = -rightP.maxJump;
   }
   
+  
   if (key == 'a') {
-    leftP.PlayerSpeed = -7;
+    leftP.PlayerSpeedX = -7;
   } else if (key == 'd') {
-    leftP.PlayerSpeed = 7;
+    leftP.PlayerSpeedX = 7;
+  }
+  if (key == 's') {
+    leftPunch = true;
+  }
+  if (key == 'w'){
+     leftP.PlayerSpeedY = -leftP.maxJump;
+  }
+  
+  
+  if (key == 'p') {
+    paused = !paused;
   }
   if (key == 'r') {
     leftScore = 0;
     rightScore = 0;
-
     loop();
   }
   
-  if (key == 's') {
-    leftPunch = true;
-  }
   
-  if (keyCode == DOWN) {
-    rightPunch = true;
-  }
+  
   
   if (key == 'w' && leftP.onGround) {
     leftP.PlayerSpeedY = -15;
@@ -219,20 +229,19 @@ void keyPressed() {
    if (keyCode == UP && rightP.onGround) {
     rightP.PlayerSpeedY = -15;
     rightP.onGround = false;
-  }
-}  
+  
 
-
-
+}
+}
 void keyReleased() {
   if (keyCode == LEFT) {
-    rightP.PlayerSpeed = 0;
+    rightP.PlayerSpeedX = 0;
   } else if (keyCode == RIGHT) {
-    rightP.PlayerSpeed = 0;
+    rightP.PlayerSpeedX = 0;
   }
   if (key == 'a') {
-    leftP.PlayerSpeed = 0;
+    leftP.PlayerSpeedX= 0;
   } else if (key == 'd') {
-    leftP. PlayerSpeed = 0;
+    leftP. PlayerSpeedX = 0;
   }
 }
